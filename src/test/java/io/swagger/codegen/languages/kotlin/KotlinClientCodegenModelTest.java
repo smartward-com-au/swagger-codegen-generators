@@ -37,12 +37,12 @@ public class KotlinClientCodegenModelTest {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(KotlinClientCodegenModelTest.class);
 
-    private Schema getArrayTestSchema() {   
+    private Schema getArrayTestSchema() {
         final Schema propertySchema = new ArraySchema()
             .items(new StringSchema())
-            .description("an array property");            
+            .description("an array property");
         return new Schema()
-            .type("object")            
+            .type("object")
             .description("a sample model")
             .addProperties("examples", propertySchema);
     }
@@ -77,7 +77,7 @@ public class KotlinClientCodegenModelTest {
     }
 
     @Test(description = "convert a simple model")
-    public void simpleModelTest() {        
+    public void simpleModelTest() {
         final Schema schema = getSimpleSchema();
         final KotlinClientCodegen codegen = new KotlinClientCodegen();
         final CodegenModel cm = codegen.fromModel("sample", schema);
@@ -93,7 +93,7 @@ public class KotlinClientCodegenModelTest {
         Assert.assertEquals(property1.name, "id");
         Assert.assertEquals(property1.defaultValue, "null");
         Assert.assertEquals(property1.baseType, "kotlin.Long");
-        Assert.assertTrue(getBooleanValue(property1, CodegenConstants.HAS_MORE_EXT_NAME));        
+        Assert.assertTrue(getBooleanValue(property1, CodegenConstants.HAS_MORE_EXT_NAME));
         Assert.assertTrue(property1.required);
         Assert.assertTrue(getBooleanValue(property1, CodegenConstants.IS_PRIMITIVE_TYPE_EXT_NAME));
         Assert.assertTrue(getBooleanValue(property1, CodegenConstants.IS_NOT_CONTAINER_EXT_NAME));
@@ -104,7 +104,7 @@ public class KotlinClientCodegenModelTest {
         Assert.assertEquals(property2.name, "firstName");
         Assert.assertEquals(property2.defaultValue, "null");
         Assert.assertEquals(property2.baseType, "kotlin.String");
-        Assert.assertTrue(getBooleanValue(property2, CodegenConstants.HAS_MORE_EXT_NAME));          
+        Assert.assertTrue(getBooleanValue(property2, CodegenConstants.HAS_MORE_EXT_NAME));
         Assert.assertTrue(property2.required);
         Assert.assertTrue(getBooleanValue(property2, CodegenConstants.IS_PRIMITIVE_TYPE_EXT_NAME));
         Assert.assertTrue(getBooleanValue(property2, CodegenConstants.IS_NOT_CONTAINER_EXT_NAME));
@@ -115,9 +115,9 @@ public class KotlinClientCodegenModelTest {
         Assert.assertEquals(property3.name, "createdAt");
         Assert.assertEquals(property3.defaultValue, "null");
         Assert.assertEquals(property3.baseType, "java.time.LocalDateTime");
-        Assert.assertFalse(getBooleanValue(property3, CodegenConstants.HAS_MORE_EXT_NAME));   
+        Assert.assertFalse(getBooleanValue(property3, CodegenConstants.HAS_MORE_EXT_NAME));
         Assert.assertFalse(property3.required);
-        Assert.assertTrue(getBooleanValue(property3, CodegenConstants.IS_NOT_CONTAINER_EXT_NAME));        
+        Assert.assertTrue(getBooleanValue(property3, CodegenConstants.IS_NOT_CONTAINER_EXT_NAME));
     }
 
     @Test(description = "convert a simple model: threetenbp")
@@ -135,7 +135,7 @@ public class KotlinClientCodegenModelTest {
         Assert.assertEquals(property3.name, "createdAt");
         Assert.assertEquals(property3.defaultValue, "null");
         Assert.assertEquals(property3.baseType, "org.threeten.bp.LocalDateTime");
-        Assert.assertFalse(getBooleanValue(property3, CodegenConstants.HAS_MORE_EXT_NAME));   
+        Assert.assertFalse(getBooleanValue(property3, CodegenConstants.HAS_MORE_EXT_NAME));
         Assert.assertFalse(property3.required);
         Assert.assertTrue(getBooleanValue(property3, CodegenConstants.IS_NOT_CONTAINER_EXT_NAME));
     }
@@ -155,7 +155,7 @@ public class KotlinClientCodegenModelTest {
         Assert.assertEquals(property3.name, "createdAt");
         Assert.assertEquals(property3.defaultValue, "null");
         Assert.assertEquals(property3.baseType, "kotlin.String");
-        Assert.assertFalse(getBooleanValue(property3, CodegenConstants.HAS_MORE_EXT_NAME));   
+        Assert.assertFalse(getBooleanValue(property3, CodegenConstants.HAS_MORE_EXT_NAME));
         Assert.assertFalse(property3.required);
         Assert.assertTrue(getBooleanValue(property3, CodegenConstants.IS_NOT_CONTAINER_EXT_NAME));
     }
@@ -175,12 +175,12 @@ public class KotlinClientCodegenModelTest {
         Assert.assertEquals(property3.name, "createdAt");
         Assert.assertEquals(property3.defaultValue, "null");
         Assert.assertEquals(property3.baseType, "java.time.LocalDateTime");
-        Assert.assertFalse(getBooleanValue(property3, CodegenConstants.HAS_MORE_EXT_NAME));   
+        Assert.assertFalse(getBooleanValue(property3, CodegenConstants.HAS_MORE_EXT_NAME));
         Assert.assertFalse(property3.required);
         Assert.assertTrue(getBooleanValue(property3, CodegenConstants.IS_NOT_CONTAINER_EXT_NAME));
     }
 
-    @Test(description = "convert a model with array property to default kotlin.Array")
+    @Test(description = "convert a model with array property to default kotlin.collections.List")
     public void arrayPropertyTest() {
         final Schema schema = getArrayTestSchema();
 
@@ -196,11 +196,11 @@ public class KotlinClientCodegenModelTest {
         Assert.assertEquals(property.baseName, "examples");
         Assert.assertEquals(property.getter, "getExamples");
         Assert.assertEquals(property.setter, "setExamples");
-        Assert.assertEquals(property.datatype, "kotlin.Array<kotlin.String>");
+        Assert.assertEquals(property.datatype, "kotlin.collections.List<kotlin.String>");
         Assert.assertEquals(property.name, "examples");
         Assert.assertEquals(property.defaultValue, "null");
-        Assert.assertEquals(property.baseType, "kotlin.Array");
-        Assert.assertEquals(property.containerType, "array");
+        Assert.assertEquals(property.baseType, "kotlin.collections.List");
+        Assert.assertEquals(property.containerType, "list");
         Assert.assertFalse(property.required);
         Assert.assertTrue(getBooleanValue(property, CodegenConstants.IS_CONTAINER_EXT_NAME));
     }

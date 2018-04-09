@@ -1,6 +1,7 @@
 package io.swagger.codegen.languages.kotlin;
 
 import io.swagger.codegen.CodegenModel;
+import io.swagger.codegen.CodegenProperty;
 import io.swagger.codegen.CliOption;
 import io.swagger.codegen.languages.DefaultCodegenConfig;
 import io.swagger.codegen.CodegenConstants;
@@ -23,8 +24,6 @@ public abstract class AbstractKotlinCodegen extends DefaultCodegenConfig  {
     private static Logger LOGGER = LoggerFactory.getLogger(AbstractKotlinCodegen.class);
 
     private Set<String> instantiationLibraryFunction;
-
-   
 
     protected String artifactId;
     protected String artifactVersion = "1.0.0";
@@ -144,7 +143,8 @@ public abstract class AbstractKotlinCodegen extends DefaultCodegenConfig  {
 
         instantiationLibraryFunction = new HashSet<String>(Arrays.asList(
                 "arrayOf",
-                "mapOf"
+                "mapOf",
+                "listOf"
         ));
 
         typeMapping = new HashMap<String, String>();
@@ -158,16 +158,20 @@ public abstract class AbstractKotlinCodegen extends DefaultCodegenConfig  {
         typeMapping.put("date-time", "java.time.LocalDateTime");
         typeMapping.put("date", "java.time.LocalDateTime");
         typeMapping.put("file", "java.io.File");
-        typeMapping.put("array", "kotlin.Array");
-        typeMapping.put("list", "kotlin.Array");
+        typeMapping.put("list", "kotlin.collections.List");
+        /* Conversion from Swagger Array property to <kotlin.Array> datatype is not recommended for KTOR.
+           Refer https://github.com/ktorio/ktor/issues/214
+           So, Swagger Array property will be converted to list datatype
+        */
+        typeMapping.put("array", "kotlin.collections.List");
         typeMapping.put("map", "kotlin.collections.Map");
         typeMapping.put("object", "kotlin.Any");
         typeMapping.put("binary", "kotlin.Array<kotlin.Byte>");
         typeMapping.put("Date", "java.time.LocalDateTime");
         typeMapping.put("DateTime", "java.time.LocalDateTime");
 
-        instantiationTypes.put("array", "arrayOf");
-        instantiationTypes.put("list", "arrayOf");
+        instantiationTypes.put("array", "listOf");
+        instantiationTypes.put("list", "listOf");
         instantiationTypes.put("map", "mapOf");
 
         importMapping = new HashMap<String, String>();
@@ -584,4 +588,16 @@ public abstract class AbstractKotlinCodegen extends DefaultCodegenConfig  {
 
         return imports;
     }
+
+    @Override
+    public CodegenProperty fromProperty(String name, Schema propertySchema) {
+        CodegenProperty codegenProperty = super.fromProperty(name, propertySchema);
+
+        if (propertySchema instanceof ArraySchema) {
+            codegenProperty.containerType = "list";
+        }
+
+        return codegenProperty;
+    }
+
 }
